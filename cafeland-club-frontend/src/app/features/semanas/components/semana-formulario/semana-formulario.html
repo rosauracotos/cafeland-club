@@ -1,0 +1,62 @@
+<section class="formulario-panel" aria-labelledby="titulo-formulario-semana">
+  <div class="formulario-encabezado">
+    <div>
+      <p class="eyebrow">{{ semanaActual ? 'Editar' : 'Registrar' }}</p>
+      <h2 id="titulo-formulario-semana">
+        {{ semanaActual ? 'Editar semana' : 'Nueva semana' }}
+      </h2>
+    </div>
+    <button type="button" class="boton-secundario" (click)="cancelar.emit()">Cancelar</button>
+  </div>
+
+  @if (error) {
+    <p class="mensaje-error" role="alert">{{ error }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="enviar()">
+    <div class="campo">
+      <label for="numero-semana">Número de semana</label>
+      <input id="numero-semana" type="number" min="1" formControlName="numeroSemana" />
+      @if (formulario.controls.numeroSemana.touched && formulario.controls.numeroSemana.invalid) {
+        <small>Ingresa un número de semana mayor que 0.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="fecha-inicio">Fecha de inicio</label>
+      <input id="fecha-inicio" type="date" formControlName="fechaInicio" />
+      @if (formulario.controls.fechaInicio.touched && formulario.controls.fechaInicio.invalid) {
+        <small>La fecha de inicio es obligatoria.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="fecha-fin">Fecha de fin</label>
+      <input id="fecha-fin" type="date" formControlName="fechaFin" />
+      @if (formulario.controls.fechaFin.touched && formulario.controls.fechaFin.hasError('required')) {
+        <small>La fecha de fin es obligatoria.</small>
+      } @else if (formulario.controls.fechaFin.touched && formulario.controls.fechaFin.hasError('periodoInvalido')) {
+        <small>La fecha de fin no puede ser anterior a la fecha de inicio.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="liga">Liga</label>
+      <select id="liga" formControlName="ligaId">
+        <option [ngValue]="0" disabled>Selecciona una liga</option>
+        @for (liga of ligas; track liga.id) {
+          <option [ngValue]="liga.id">
+            Liga {{ liga.numero }} · mínimo {{ liga.minimoPuntosTorneo }} pts.
+          </option>
+        }
+      </select>
+      @if (formulario.controls.ligaId.touched && formulario.controls.ligaId.invalid) {
+        <small>Selecciona una liga.</small>
+      }
+    </div>
+
+    <button type="submit" class="boton-primario" [disabled]="guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar semana' }}
+    </button>
+  </form>
+</section>

@@ -1,0 +1,68 @@
+<form>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Miembro</th>
+          <th scope="col">Desafío</th>
+          <th scope="col">Cumple desafío</th>
+          <th scope="col">Torneo</th>
+          <th scope="col">Cumple torneo</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (control of resultados.controls; track filasActuales[$index].miembroId; let i = $index) {
+          <tr [formGroup]="control">
+            <td>{{ filasActuales[i].nombreMiembro }}</td>
+            <td>
+              <input type="number" min="0" formControlName="puntosDesafio" [attr.aria-label]="'Puntos de desafío de ' + filasActuales[i].nombreMiembro" />
+              @if (control.controls.puntosDesafio.touched && control.controls.puntosDesafio.invalid) {
+                <small>Ingresa 0 o más.</small>
+              }
+            </td>
+            <td>
+              @if (filasActuales[i].cumpleDesafio === null) {
+                <span class="pendiente">Sin guardar</span>
+              } @else {
+                <span class="indicador" [class.cumple]="filasActuales[i].cumpleDesafio" [class.no-cumple]="!filasActuales[i].cumpleDesafio">
+                  {{ filasActuales[i].cumpleDesafio ? '✓ Cumple' : '✕ No cumple' }}
+                </span>
+              }
+            </td>
+            <td>
+              <input type="number" min="0" formControlName="puntosTorneo" [attr.aria-label]="'Puntos de torneo de ' + filasActuales[i].nombreMiembro" />
+              @if (control.controls.puntosTorneo.touched && control.controls.puntosTorneo.invalid) {
+                <small>Ingresa 0 o más.</small>
+              }
+            </td>
+            <td>
+              @if (filasActuales[i].cumpleTorneo === null) {
+                <span class="pendiente">Sin guardar</span>
+              } @else {
+                <span class="indicador" [class.cumple]="filasActuales[i].cumpleTorneo" [class.no-cumple]="!filasActuales[i].cumpleTorneo">
+                  {{ filasActuales[i].cumpleTorneo ? '✓ Cumple' : '✕ No cumple' }}
+                </span>
+              }
+            </td>
+            <td>
+              <button
+                type="button"
+                class="boton-primario"
+                [disabled]="guardandoMiembroId === filasActuales[i].miembroId"
+                (click)="guardarFila(i)"
+              >
+                @if (guardandoMiembroId === filasActuales[i].miembroId) {
+                  Guardando...
+                } @else {
+                  {{ filasActuales[i].resultadoId === null ? 'Guardar' : 'Actualizar' }}
+                }
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</form>

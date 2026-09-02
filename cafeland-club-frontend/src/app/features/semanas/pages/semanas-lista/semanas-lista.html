@@ -1,0 +1,72 @@
+<main class="pagina-semanas">
+  <header class="encabezado">
+    <div>
+      <p class="eyebrow">Cafeland Club</p>
+      <h1>Semanas</h1>
+      <p>Gestión de semanas y liga del club.</p>
+    </div>
+    <button
+      type="button"
+      class="boton boton-primario"
+      [disabled]="cargando() || ligas().length === 0"
+      (click)="mostrarNueva()"
+    >
+      Nueva semana
+    </button>
+  </header>
+
+  @if (mensajeExito()) {
+    <p class="mensaje mensaje-exito" role="status">{{ mensajeExito() }}</p>
+  }
+  @if (mensajeError()) {
+    <p class="mensaje mensaje-error" role="alert">{{ mensajeError() }}</p>
+  }
+
+  @if (formularioVisible()) {
+    <app-semana-formulario
+      [semana]="semanaEnEdicion()"
+      [ligas]="ligas()"
+      [guardando]="guardando()"
+      [error]="errorFormulario()"
+      (guardar)="guardar($event)"
+      (cancelar)="cancelarFormulario()"
+    />
+  }
+
+  @if (cargando()) {
+    <p class="mensaje">Cargando semanas...</p>
+  } @else if (semanas().length === 0) {
+    <p class="mensaje">Todavía no hay semanas registradas.</p>
+  } @else {
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Semana</th>
+            <th scope="col">Fecha de inicio</th>
+            <th scope="col">Fecha de fin</th>
+            <th scope="col">Liga</th>
+            <th scope="col">Mínimo torneo</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (semana of semanas(); track semana.id) {
+            <tr>
+              <td>Semana {{ semana.numeroSemana }}</td>
+              <td>{{ semana.fechaInicio | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+              <td>{{ semana.fechaFin | date: 'dd/MM/yyyy' : 'UTC' }}</td>
+              <td>Liga {{ semana.ligaNumero }}</td>
+              <td>{{ semana.minimoPuntosTorneo }} puntos</td>
+              <td>
+                <button type="button" class="boton boton-secundario" (click)="editar(semana)">
+                  Editar
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</main>

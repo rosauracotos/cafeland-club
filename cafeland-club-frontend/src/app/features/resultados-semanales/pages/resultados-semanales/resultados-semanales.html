@@ -1,0 +1,49 @@
+<main class="pagina-resultados">
+  <header class="encabezado">
+    <div>
+      <p class="eyebrow">Cafeland Club</p>
+      <h1>Resultados semanales</h1>
+      <p>Registro de puntos del desafío y del torneo.</p>
+    </div>
+  </header>
+
+  <section class="selector-panel">
+    <label for="semana">Semana</label>
+    <select id="semana" [disabled]="cargandoSemanas()" (change)="seleccionarSemana($any($event.target).value)">
+      <option value="">Selecciona una semana</option>
+      @for (semana of semanas(); track semana.id) {
+        <option [value]="semana.id">Semana {{ semana.numeroSemana }}</option>
+      }
+    </select>
+  </section>
+
+  @if (mensajeExito()) {
+    <p class="mensaje mensaje-exito" role="status">{{ mensajeExito() }}</p>
+  }
+  @if (mensajeError()) {
+    <p class="mensaje mensaje-error" role="alert">{{ mensajeError() }}</p>
+  }
+
+  @if (semanaSeleccionada(); as semana) {
+    <section class="resumen" aria-label="Información de la semana seleccionada">
+      <div><span>Semana</span><strong>{{ semana.numeroSemana }}</strong></div>
+      <div><span>Liga</span><strong>Liga {{ semana.ligaNumero }}</strong></div>
+      <div><span>Mínimo desafío</span><strong>{{ minimoDesafio }} puntos</strong></div>
+      <div><span>Mínimo torneo</span><strong>{{ semana.minimoPuntosTorneo }} puntos</strong></div>
+    </section>
+
+    @if (cargandoResultados()) {
+      <p class="mensaje">Cargando miembros y resultados...</p>
+    } @else if (filas().length === 0) {
+      <p class="mensaje">No hay miembros activos para registrar resultados.</p>
+    } @else {
+      <app-resultados-tabla
+        [filas]="filas()"
+        [guardandoMiembroId]="guardandoMiembroId()"
+        (guardar)="guardarResultado($event)"
+      />
+    }
+  } @else if (!cargandoSemanas()) {
+    <p class="mensaje">Selecciona una semana para cargar los miembros y sus resultados.</p>
+  }
+</main>

@@ -1,0 +1,50 @@
+<section class="formulario-panel" aria-labelledby="titulo-formulario">
+  <div class="formulario-encabezado">
+    <div>
+      <p class="eyebrow">{{ miembroActual ? 'Editar' : 'Registrar' }}</p>
+      <h2 id="titulo-formulario">
+        {{ miembroActual ? 'Editar miembro' : 'Nuevo miembro' }}
+      </h2>
+    </div>
+    <button type="button" class="boton-secundario" (click)="cancelar.emit()">Cancelar</button>
+  </div>
+
+  @if (error) {
+    <p class="mensaje-error" role="alert">{{ error }}</p>
+  }
+
+  <form [formGroup]="formulario" (ngSubmit)="enviar()">
+    <div class="campo">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" formControlName="nombre" autocomplete="off" />
+      @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+        <small>El nombre es obligatorio.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="rango">Rango</label>
+      <select id="rango" formControlName="rangoId">
+        <option [ngValue]="0" disabled>Selecciona un rango</option>
+        @for (rango of rangos; track rango.id) {
+          <option [ngValue]="rango.id">{{ rango.nombre }}</option>
+        }
+      </select>
+      @if (formulario.controls.rangoId.touched && formulario.controls.rangoId.invalid) {
+        <small>Selecciona un rango.</small>
+      }
+    </div>
+
+    <div class="campo">
+      <label for="fecha-ingreso">Fecha de ingreso</label>
+      <input id="fecha-ingreso" type="date" formControlName="fechaIngreso" />
+      @if (formulario.controls.fechaIngreso.touched && formulario.controls.fechaIngreso.invalid) {
+        <small>La fecha de ingreso es obligatoria.</small>
+      }
+    </div>
+
+    <button type="submit" class="boton-primario" [disabled]="guardando">
+      {{ guardando ? 'Guardando...' : 'Guardar miembro' }}
+    </button>
+  </form>
+</section>

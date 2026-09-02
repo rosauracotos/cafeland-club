@@ -1,0 +1,13 @@
+<header class="barra-principal">
+  <nav class="navegacion" aria-label="Navegación principal">
+    <a class="marca" routerLink="/">Cafeland Club</a>
+    <div class="enlaces">
+      <a routerLink="/" routerLinkActive="activo" [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
+      <a routerLink="/miembros" routerLinkActive="activo">Miembros</a>
+      <a routerLink="/semanas" routerLinkActive="activo">Semanas</a>
+      <a routerLink="/resultados-semanales" routerLinkActive="activo">Resultados Semanales</a>
+    </div>
+  </nav>
+</header>
+
+<router-outlet />
